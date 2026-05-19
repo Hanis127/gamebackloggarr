@@ -1,4 +1,4 @@
-# 🎮 Backloggarr
+# 🎮 GameBackLoggarr
 
 A self-hosted co-op game backlog manager for two people. Suggest games, vote on what to play next, and track your progress — with automatic metadata from IGDB (cover art, description, genres, platforms, ratings).
 
@@ -18,7 +18,7 @@ A self-hosted co-op game backlog manager for two people. Suggest games, vote on 
 1. Go to [dev.twitch.tv/console](https://dev.twitch.tv/console)
 2. Sign in with a Twitch account (or create one — it's free)
 3. Click **Register Your Application**
-4. Name: anything (e.g. `backloggarr`), OAuth Redirect URL: `http://localhost`, Category: `Application Integration`
+4. Name: anything (e.g. `gamebackloggarr`), OAuth Redirect URL: `http://localhost`, Category: `Application Integration`
 5. Copy your **Client ID** and generate a **Client Secret**
 
 ### 2. Configure

@@ -1,7 +1,7 @@
 import sqlite3
 import os
 
-DB_PATH = os.getenv("DB_PATH", "/data/backloggarr.db")
+DB_PATH = os.getenv("DB_PATH", "/data/gamebackloggarr.db")
 
 
 def get_db():
