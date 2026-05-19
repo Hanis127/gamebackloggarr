@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Register — Backloggarr{% endblock %}
+{% block content %}
+<div class="auth-wrap">
+  <div class="auth-box">
+    <div class="auth-logo">🎮</div>
+    <h1 class="auth-title">Create Account</h1>
+    <p class="auth-sub">You need an invite code to join</p>
+
+    {% if error %}
+    <div class="alert alert-error">{{ error }}</div>
+    {% endif %}
+
+    <form method="post" action="/register" class="auth-form">
+      <div class="field">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" autocomplete="username" required autofocus>
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" autocomplete="new-password" required>
+      </div>
+      <div class="field">
+        <label for="invite_code">Invite Code</label>
+        <input type="text" id="invite_code" name="invite_code" required placeholder="Ask your co-op partner">
+      </div>
+      <button type="submit" class="btn btn-primary btn-full">Create Account</button>
+    </form>
+
+    <p class="auth-switch">Already have an account? <a href="/login">Sign in</a></p>
+  </div>
+</div>
+{% endblock %}

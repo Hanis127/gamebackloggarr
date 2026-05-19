@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+{% block title %}Backloggarr{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <div class="page-header-left">
+    <h2 class="page-title">Game Queue</h2>
+    <p class="page-sub">{{ users | join(' &amp; ') | safe }}</p>
+  </div>
+  <button class="btn btn-primary" id="addGameBtn">+ Suggest a Game</button>
+</div>
+
+<!-- Status tabs -->
+<div class="tabs">
+  {% for s in statuses %}
+  <a href="/games?status={{ s }}&sort={{ sort }}"
+     class="tab {% if status == s %}tab-active{% endif %}">
+    {{ s | capitalize }}
+    <span class="tab-count">{{ counts[s] }}</span>
+  </a>
+  {% endfor %}
+</div>
+
+<!-- Sort bar -->
+<div class="sort-bar">
+  <span class="sort-label">Sort by</span>
+  {% for label, key in [("Votes", "votes"), ("Newest", "newest"), ("Title", "title"), ("Rating", "rating")] %}
+  <a href="/games?status={{ status }}&sort={{ key }}"
+     class="sort-opt {% if sort == key %}sort-active{% endif %}">{{ label }}</a>
+  {% endfor %}
+</div>
+
+<!-- Game grid -->
+{% if games %}
+<div class="game-grid">
+  {% for game in games %}
+  <div class="game-card" data-id="{{ game.id }}">
+    <div class="game-cover">
+      {% if game.cover_url %}
+      <img src="{{ game.cover_url }}" alt="{{ game.title }}" loading="lazy">
+      {% else %}
+      <div class="game-cover-placeholder">🎮</div>
+      {% endif %}
+    </div>
+    <div class="game-body">
+      <h3 class="game-title">{{ game.title }}</h3>
+      <div class="game-meta">
+        {% if game.release_year %}<span>{{ game.release_year }}</span>{% endif %}
+        {% if game.rating %}<span class="game-rating">★ {{ game.rating }}</span>{% endif %}
+      </div>
+      {% if game.genres %}
+      <div class="game-genres">
+        {% for genre in game.genres.split(', ')[:3] %}
+        <span class="tag">{{ genre }}</span>
+        {% endfor %}
+      </div>
+      {% endif %}
+      {% if game.summary %}
+      <p class="game-summary">{{ game.summary[:120] }}{% if game.summary|length > 120 %}…{% endif %}</p>
+      {% endif %}
+      <div class="game-footer">
+        <div class="vote-row">
+          <button class="vote-btn upvote {% if game.my_vote == 1 %}active{% endif %}"
+                  data-game="{{ game.id }}" data-value="1" title="Want to play">▲</button>
+          <span class="vote-score" id="score-{{ game.id }}">{{ game.vote_score }}</span>
+          <button class="vote-btn downvote {% if game.my_vote == -1 %}active{% endif %}"
+                  data-game="{{ game.id }}" data-value="-1" title="Not interested">▼</button>
+        </div>
+        <div class="game-actions">
+          <form method="post" action="/games/{{ game.id }}/status" class="inline-form">
+            <select name="status" onchange="this.form.submit()" class="status-select">
+              {% for s in statuses %}
+              <option value="{{ s }}" {% if game.status == s %}selected{% endif %}>
+                {{ s | capitalize }}
+              </option>
+              {% endfor %}
+            </select>
+          </form>
+          <form method="post" action="/games/{{ game.id }}/delete" class="inline-form"
+                onsubmit="return confirm('Remove {{ game.title }}?')">
+            <button type="submit" class="btn-icon" title="Remove">✕</button>
+          </form>
+        </div>
+      </div>
+      {% if game.suggested_by_name %}
+      <div class="suggested-by">suggested by {{ game.suggested_by_name }}</div>
+      {% endif %}
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+  <div class="empty-icon">🎮</div>
+  <p>No games in <strong>{{ status }}</strong> yet.</p>
+  {% if status == 'backlog' %}
+  <button class="btn btn-primary" id="addGameBtn2">Suggest the first one</button>
+  {% endif %}
+</div>
+{% endif %}
+
+<!-- Add game modal -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Suggest a Game</h3>
+      <button class="modal-close" id="modalClose">✕</button>
+    </div>
+
+    <div class="field">
+      <label for="searchInput">Search IGDB</label>
+      <input type="text" id="searchInput" placeholder="Type a game name…" autocomplete="off">
+    </div>
+
+    <div id="searchResults" class="search-results hidden"></div>
+
+    <form method="post" action="/games/add" id="addForm" class="hidden">
+      <input type="hidden" name="igdb_id" id="f_igdb_id">
+      <input type="hidden" name="title" id="f_title">
+      <input type="hidden" name="cover_url" id="f_cover_url">
+      <input type="hidden" name="summary" id="f_summary">
+      <input type="hidden" name="genres" id="f_genres">
+      <input type="hidden" name="platforms" id="f_platforms">
+      <input type="hidden" name="release_year" id="f_release_year">
+      <input type="hidden" name="rating" id="f_rating">
+
+      <div class="selected-game" id="selectedGame"></div>
+      <button type="submit" class="btn btn-primary btn-full">Add to Backlog</button>
+    </form>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/app.js"></script>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Sign In — Backloggarr{% endblock %}
+{% block content %}
+<div class="auth-wrap">
+  <div class="auth-box">
+    <div class="auth-logo">🎮</div>
+    <h1 class="auth-title">Backloggarr</h1>
+    <p class="auth-sub">Co-op game queue for two</p>
+
+    {% if error %}
+    <div class="alert alert-error">{{ error }}</div>
+    {% endif %}
+
+    <form method="post" action="/login" class="auth-form">
+      <div class="field">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" autocomplete="username" required autofocus>
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" autocomplete="current-password" required>
+      </div>
+      <button type="submit" class="btn btn-primary btn-full">Sign In</button>
+    </form>
+
+    <p class="auth-switch">No account? <a href="/register">Register with invite code</a></p>
+  </div>
+</div>
+{% endblock %}
