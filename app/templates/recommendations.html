@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block title %}Discover — Backlogger{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <div class="page-header-left">
+    <h2 class="page-title">✨ Discover</h2>
+    <p class="page-sub">Games similar to what's in your backlog</p>
+  </div>
+</div>
+
+{% if no_igdb %}
+<div class="empty-state">
+  <div class="empty-icon">📭</div>
+  <p>Your backlog is empty — add some games first and recommendations will appear here.</p>
+  <a href="/games" class="btn btn-primary">Go to Backlog</a>
+</div>
+
+{% elif igdb_error %}
+<div class="empty-state">
+  <div class="empty-icon">⚠️</div>
+  <p>Couldn't reach IGDB. Check your API credentials or try again later.</p>
+</div>
+
+{% elif not recommendations %}
+<div class="empty-state">
+  <div class="empty-icon">🤷</div>
+  <p>IGDB didn't return similar games for your current backlog. Try adding more games!</p>
+</div>
+
+{% else %}
+
+<!-- Source games pill strip -->
+<div class="rec-source-strip">
+  <span class="rec-source-label">Based on:</span>
+  {% for g in backlog_games[:8] %}
+  <span class="rec-source-pill">{{ g.title }}</span>
+  {% endfor %}
+  {% if backlog_games|length > 8 %}
+  <span class="rec-source-pill muted">+{{ backlog_games|length - 8 }} more</span>
+  {% endif %}
+</div>
+
+<div class="game-grid">
+  {% for game in recommendations %}
+  <div class="game-card rec-card">
+    <div class="game-cover">
+      {% if game.cover_url %}
+      <img src="{{ game.cover_url }}" alt="{{ game.title }}" loading="lazy">
+      {% else %}
+      <div class="game-cover-placeholder">🎮</div>
+      {% endif %}
+
+      {% if game.match_score > 1 %}
+      <div class="rec-badge">{{ game.match_score }} matches</div>
+      {% endif %}
+    </div>
+
+    <div class="game-body">
+      <h3 class="game-title">{{ game.title }}</h3>
+      <div class="game-meta">
+        {% if game.release_year %}<span>{{ game.release_year }}</span>{% endif %}
+        {% if game.rating %}<span class="game-rating">★ {{ game.rating }}</span>{% endif %}
+      </div>
+
+      {% if game.genres %}
+      <div class="game-genres">
+        {% for genre in game.genres.split(', ')[:3] %}
+        <span class="tag">{{ genre }}</span>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      {% if game.summary %}
+      <p class="game-summary">{{ game.summary[:110] }}{% if game.summary|length > 110 %}…{% endif %}</p>
+      {% endif %}
+
+      {% if game.because_of %}
+      <p class="rec-because">Because you have <em>{{ game.because_of[0] }}</em>{% if game.because_of|length > 1 %} and {{ game.because_of|length - 1 }} other{% if game.because_of|length > 2 %}s{% endif %}{% endif %}</p>
+      {% endif %}
+
+      <form method="post" action="/games/add" class="rec-add-form">
+        <input type="hidden" name="igdb_id" value="{{ game.igdb_id }}">
+        <input type="hidden" name="title" value="{{ game.title }}">
+        <input type="hidden" name="cover_url" value="{{ game.cover_url or '' }}">
+        <input type="hidden" name="summary" value="{{ game.summary or '' }}">
+        <input type="hidden" name="genres" value="{{ game.genres or '' }}">
+        <input type="hidden" name="platforms" value="{{ game.platforms or '' }}">
+        <input type="hidden" name="release_year" value="{{ game.release_year or '' }}">
+        <input type="hidden" name="rating" value="{{ game.rating or '' }}">
+        <button type="submit" class="btn btn-primary btn-full btn-sm">+ Add to Backlog</button>
+      </form>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+{% endblock %}

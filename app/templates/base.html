@@ -13,6 +13,10 @@
   {% if user is defined and user %}
   <nav class="navbar">
     <a href="/games" class="nav-brand">🎮 GameBackLoggarr</a>
+    <div class="nav-links">
+      <a href="/games" class="nav-link">Backlog</a>
+      <a href="/recommendations" class="nav-link">✨ Discover</a>
+    </div>
     <div class="nav-right">
       <span class="nav-user">{{ user.username }}</span>
       <a href="/logout" class="nav-logout">Sign out</a>
