@@ -6,7 +6,7 @@ from contextlib import asynccontextmanager
 import uvicorn
 
 from app.database import init_db
-from app.routers import auth, games, votes
+from app.routers import auth, games, votes, recommendations
 from app.dependencies import get_current_user_optional
 
 
@@ -24,6 +24,8 @@ templates = Jinja2Templates(directory="app/templates")
 app.include_router(auth.router)
 app.include_router(games.router)
 app.include_router(votes.router)
+app.include_router(recommendations.router)
+
 
 
 @app.get("/", response_class=HTMLResponse)
