@@ -13,7 +13,7 @@
 <!-- Status tabs -->
 <div class="tabs">
   {% for s in statuses %}
-  <a href="/games?status={{ s }}&sort={{ sort }}"
+  <a href="/games?status={{ s }}&sort={{ sort }}&coop={{ coop }}"
      class="tab {% if status == s %}tab-active{% endif %}">
     {{ s | capitalize }}
     <span class="tab-count">{{ counts[s] }}</span>
@@ -25,9 +25,17 @@
 <div class="sort-bar">
   <span class="sort-label">Sort by</span>
   {% for label, key in [("Votes", "votes"), ("Newest", "newest"), ("Title", "title"), ("Rating", "rating")] %}
-  <a href="/games?status={{ status }}&sort={{ key }}"
+  <a href="/games?status={{ status }}&sort={{ key }}&coop={{ coop }}"
      class="sort-opt {% if sort == key %}sort-active{% endif %}">{{ label }}</a>
   {% endfor %}
+</div>
+
+<!-- Co-op filter -->
+<div class="filter-bar">
+  <a href="/games?status={{ status }}&sort={{ sort }}&coop={% if coop == '1' %}0{% else %}1{% endif %}"
+     class="filter-toggle {% if coop == '1' %}filter-active{% endif %}">
+    🤝 Co-op / Multiplayer only
+  </a>
 </div>
 
 <!-- Game grid -->
@@ -53,6 +61,13 @@
         {% for genre in game.genres.split(', ')[:3] %}
         <span class="tag">{{ genre }}</span>
         {% endfor %}
+      </div>
+      {% endif %}
+      {% if game.game_modes %}
+      <div class="game-modes">
+        {% if 'Co-operative' in game.game_modes %}<span class="mode-badge coop">🤝 Co-op</span>{% endif %}
+        {% if 'Multiplayer' in game.game_modes %}<span class="mode-badge multi">👥 Multi</span>{% endif %}
+        {% if 'Single player' in game.game_modes and 'Co-operative' not in game.game_modes and 'Multiplayer' not in game.game_modes %}<span class="mode-badge solo">🎮 Solo</span>{% endif %}
       </div>
       {% endif %}
       {% if game.summary %}
@@ -123,6 +138,7 @@
       <input type="hidden" name="platforms" id="f_platforms">
       <input type="hidden" name="release_year" id="f_release_year">
       <input type="hidden" name="rating" id="f_rating">
+      <input type="hidden" name="game_modes" id="f_game_modes">
 
       <div class="selected-game" id="selectedGame"></div>
       <button type="submit" class="btn btn-primary btn-full">Add to Backlog</button>

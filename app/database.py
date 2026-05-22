@@ -68,3 +68,18 @@ def init_db():
 
     conn.commit()
     conn.close()
+
+
+def migrate_db():
+    """Run any pending migrations on existing DB."""
+    import os
+    db_path = os.getenv("DB_PATH", "/data/gamebackloggarr.db")
+    if not os.path.exists(db_path):
+        return
+    conn = sqlite3.connect(db_path, check_same_thread=False)
+    try:
+        conn.execute("ALTER TABLE games ADD COLUMN game_modes TEXT")
+        conn.commit()
+    except Exception:
+        pass  # already exists
+    conn.close()

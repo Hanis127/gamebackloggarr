@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Discover — Backlogger{% endblock %}
+{% block title %}Discover — GameBackLoggarr{% endblock %}
 {% block content %}
 
 <div class="page-header">
@@ -71,6 +71,13 @@
       </div>
       {% endif %}
 
+      {% if game.game_modes %}
+      <div class="game-modes">
+        {% if 'Co-operative' in game.game_modes %}<span class="mode-badge coop">🤝 Co-op</span>{% endif %}
+        {% if 'Multiplayer' in game.game_modes %}<span class="mode-badge multi">👥 Multi</span>{% endif %}
+        {% if 'Single player' in game.game_modes and 'Co-operative' not in game.game_modes and 'Multiplayer' not in game.game_modes %}<span class="mode-badge solo">🎮 Solo</span>{% endif %}
+      </div>
+      {% endif %}
       {% if game.summary %}
       <p class="game-summary">{{ game.summary[:110] }}{% if game.summary|length > 110 %}…{% endif %}</p>
       {% endif %}
@@ -88,6 +95,7 @@
         <input type="hidden" name="platforms" value="{{ game.platforms or '' }}">
         <input type="hidden" name="release_year" value="{{ game.release_year or '' }}">
         <input type="hidden" name="rating" value="{{ game.rating or '' }}">
+        <input type="hidden" name="game_modes" value="{{ game.game_modes or '' }}">
         <button type="submit" class="btn btn-primary btn-full btn-sm">+ Add to Backlog</button>
       </form>
     </div>

@@ -416,3 +416,119 @@ main { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem; }
   .game-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
   main { padding: 1rem; }
 }
+
+/* ── Navbar links ── */
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-left: 1.5rem;
+}
+.nav-link {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--muted);
+  padding: 0.3rem 0.75rem;
+  border-radius: 99px;
+  transition: color 0.15s, background 0.15s;
+}
+.nav-link:hover {
+  color: var(--text);
+  background: var(--surface2);
+  text-decoration: none;
+}
+
+/* ── Recommendations ── */
+.rec-source-strip {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.82rem;
+}
+.rec-source-label {
+  color: var(--muted);
+  font-family: var(--mono);
+  margin-right: 0.25rem;
+}
+.rec-source-pill {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 3px 10px;
+  border-radius: 99px;
+  font-size: 0.78rem;
+}
+.rec-source-pill.muted { color: var(--muted); }
+
+.rec-card { position: relative; }
+
+.rec-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: var(--accent2);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  font-family: var(--mono);
+  padding: 2px 8px;
+  border-radius: 99px;
+}
+
+.rec-because {
+  font-size: 0.75rem;
+  color: var(--muted);
+  font-style: italic;
+  line-height: 1.4;
+}
+.rec-because em { color: var(--accent); font-style: normal; }
+
+.rec-add-form { margin-top: auto; padding-top: 0.5rem; }
+.btn-sm { padding: 0.4rem 1rem; font-size: 0.82rem; }
+
+/* ── Co-op filter ── */
+.filter-bar {
+  margin-bottom: 1.25rem;
+}
+.filter-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 1rem;
+  border-radius: 99px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  transition: all 0.15s;
+}
+.filter-toggle:hover {
+  color: var(--text);
+  border-color: var(--accent);
+  text-decoration: none;
+}
+.filter-active {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: rgba(110,231,183,0.08);
+}
+
+/* ── Game mode badges ── */
+.game-modes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin-top: 0.1rem;
+}
+.mode-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  font-family: var(--mono);
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+.mode-badge.coop  { background: rgba(110,231,183,0.15); color: var(--accent); }
+.mode-badge.multi { background: rgba(129,140,248,0.15); color: var(--accent2); }
+.mode-badge.solo  { background: var(--surface2); color: var(--muted); }

@@ -74,6 +74,7 @@ function selectGame(g) {
   document.getElementById('f_platforms').value = g.platforms || '';
   document.getElementById('f_release_year').value = g.release_year || '';
   document.getElementById('f_rating').value = g.rating || '';
+  document.getElementById('f_game_modes').value = g.game_modes || '';
 
   document.getElementById('selectedGame').innerHTML = `
     ${g.cover_url ? `<img src="${g.cover_url}" alt="${escHtml(g.title)}">` : ''}

@@ -77,7 +77,7 @@ async def get_similar_games(igdb_ids: list[int], already_have: set[int], limit_p
             "https://api.igdb.com/v4/games",
             headers={"Client-ID": IGDB_CLIENT_ID, "Authorization": f"Bearer {token}"},
             content=f"""
-                fields id, name, cover.image_id, first_release_date, genres.name, platforms.name, summary, rating;
+                fields id, name, cover.image_id, first_release_date, genres.name, platforms.name, game_modes.name, summary, rating;
                 where id = ({ids_str2}) & version_parent = null;
                 limit 20;
             """,
@@ -93,6 +93,7 @@ async def get_similar_games(igdb_ids: list[int], already_have: set[int], limit_p
             year = time.strftime("%Y", time.gmtime(g["first_release_date"]))
         genres = ", ".join(x["name"] for x in g.get("genres", []))
         platforms = ", ".join(x["name"] for x in g.get("platforms", []))
+        game_modes = ", ".join(x["name"] for x in g.get("game_modes", []))
         gid = g["id"]
         results.append({
             "igdb_id": gid,
@@ -101,6 +102,7 @@ async def get_similar_games(igdb_ids: list[int], already_have: set[int], limit_p
             "summary": g.get("summary", "")[:300] if g.get("summary") else "",
             "genres": genres,
             "platforms": platforms,
+            "game_modes": game_modes,
             "release_year": year,
             "rating": round(g["rating"] / 10, 1) if g.get("rating") else None,
             "match_score": tally.get(gid, 0),
@@ -120,7 +122,7 @@ async def search_games(query: str, limit: int = 8) -> list[dict]:
             "https://api.igdb.com/v4/games",
             headers={"Client-ID": IGDB_CLIENT_ID, "Authorization": f"Bearer {token}"},
             content=f"""
-                fields id, name, cover.image_id, first_release_date, genres.name, platforms.name, summary, rating;
+                fields id, name, cover.image_id, first_release_date, genres.name, platforms.name, game_modes.name, summary, rating;
                 search "{query}";
                 where version_parent = null;
                 limit {limit};
@@ -136,6 +138,7 @@ async def search_games(query: str, limit: int = 8) -> list[dict]:
             year = time.strftime("%Y", time.gmtime(g["first_release_date"]))
         genres = ", ".join(x["name"] for x in g.get("genres", []))
         platforms = ", ".join(x["name"] for x in g.get("platforms", []))
+        game_modes = ", ".join(x["name"] for x in g.get("game_modes", []))
         results.append({
             "igdb_id": g["id"],
             "title": g["name"],
@@ -143,6 +146,7 @@ async def search_games(query: str, limit: int = 8) -> list[dict]:
             "summary": g.get("summary", "")[:500] if g.get("summary") else "",
             "genres": genres,
             "platforms": platforms,
+            "game_modes": game_modes,
             "release_year": year,
             "rating": round(g["rating"] / 10, 1) if g.get("rating") else None,
         })
